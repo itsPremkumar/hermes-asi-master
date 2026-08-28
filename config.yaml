@@ -1,0 +1,127 @@
+# config.yaml — HERMES Advanced v2.0 — Base Configuration
+# Location: ~/.hermes/config.yaml (copy this file there)
+# Secrets go in ~/.hermes/.env — NEVER in this file
+# Full reference: https://hermes-agent.nousresearch.com/docs/user-guide/configuration
+# Companion: SOUL.md §10 and SKILL.md §1 define why these settings are load-bearing
+
+# --- Model Provider ---
+# Requirement: >=64,000 context or Hermes rejects at startup
+provider: "REPLACE_ME"          # e.g. "anthropic", "openrouter", "nous", "openai"
+model: "REPLACE_ME"             # e.g. "anthropic/claude-sonnet-4", "openai/gpt-4o"
+# base_url: "https://..."       # only for custom/self-hosted endpoint
+# api_key_env: "ANTHROPIC_API_KEY"  # env var name in .env
+
+# --- Terminal Backend ---
+# Most sandboxed your setup allows — this backend is high-blast-radius (SOUL.md §6)
+terminal:
+  backend: "REPLACE_ME"         # e.g. "docker" (recommended), "local", "remote"
+  timeout_seconds: 120
+  max_output_bytes: 51200
+
+# --- Memory — Hermes Advanced tuned ---
+# Backs memory/MEMORY.md and memory/USER.md — loaded into EVERY session's context
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 4000        # INCREASED from 2200 for Advanced (stores evidence graphs)
+  user_char_limit: 2000          # INCREASED from 1375 for richer profile
+  write_approval: true           # true = Hermes asks before writing memory (recommended)
+                                # false = writes freely (Hermes default) — less governed
+  ttl_default_days: 90
+  provenance_required: true
+  spotlighting: true            # mark tool/memory content as DATA vs operator instructions
+
+# --- Toolsets — Hermes Advanced Stack ---
+# Start narrow, add deliberately. High-blast-radius tools are commented out — enabling is a decision.
+toolsets:
+  enabled:
+    - web_search               # REQUIRED — Hermes search superintelligence
+    - browser                  # REQUIRED for Advanced search (renders JS, bypasses snippet limits)
+    - file_read                # REQUIRED
+    - file_write               # REQUIRED — evidence graphs must survive truncation
+    - terminal_exec            # RECOMMENDED — docker backend is most advanced/sandboxed
+    # - messaging_send         # GATED — R4+, needs explicit approval (SOUL.md §6)
+  allowlist: []                # explicit allowlist (empty = use enabled list)
+  blocklist: []
+  health_check: true           # verify tools actually work at boot
+
+# --- Search Tuning — Hermes Advanced Search-Optimized ---
+search:
+  default_results: 10
+  max_parallel_searches: 5     # Hermes parallel width for search superintelligence
+  timeout_seconds: 30
+  freshness_preference: high   # prefer last 7-30 days for time-sensitive facts
+  language: en
+  evidence_persistence: true   # save every source to ./evidence/
+
+# --- Permissions & Risk — Hermes Advanced R0-R6 ---
+permissions:
+  default_policy: deny
+  approval_required_for: [R4, R5, R6]
+  auto_approve: [R0, R1, R2]
+  audit_log: true
+  least_privilege: true
+  spotlighting: true
+
+# --- Sandboxing — Hermes Advanced ---
+sandbox:
+  enabled: true
+  filesystem_policy: restricted
+  network_policy: limited
+  process_policy: contained
+  resource_limits:
+    memory_mb: 2048
+    cpu_percent: 80
+    timeout_seconds: 300
+  attestation: true            # cryptographic attestation where supported [ASI]
+
+# --- Scheduling & Continuity — Hermes Advanced ---
+scheduler:
+  enabled: false               # true = 24/7 Hermes operation (heartbeat mode)
+  heartbeat_interval_seconds: 60
+  lease_timeout_seconds: 300
+  checkpoint_interval_minutes: 10
+  max_concurrent_missions: 3
+  max_concurrent_agents: 8
+  re_anchor_interval_minutes: 60  # re-inject SOUL.md §6 + AGENT.md on long sessions
+
+# --- Evaluation — Hermes Advanced ---
+evaluation:
+  enabled: true
+  run_on_completion: true
+  benchmarks: []
+  regression_protection: true
+  evaluator_model: ""          # separate model for independent verification (recommended)
+
+# --- World Model — Hermes Advanced ---
+world_model:
+  persist: true
+  max_entities: 1000
+  max_transitions: 10000
+  snapshot_on_checkpoint: true
+  multi_horizon: true          # past + present + near future + strategic future [ASI]
+
+# --- Logging & Observability — Hermes Advanced ---
+logging:
+  level: info                  # debug | info | warn | error
+  structured: true
+  include_provenance: true
+  redact_secrets: true
+  retention_days: 30
+  evidence_log: true           # log every web_search source with URL + date
+
+# --- Agent Factory — Hermes Advanced Swarm ---
+agents:
+  max_depth: 4
+  max_fanout: 8
+  default_budget_tokens: 8000
+  default_timeout_seconds: 180
+  require_termination_condition: true
+  isolation: true              # each subagent gets isolated context (prevents pollution)
+
+# --- Guardrails — Hermes Advanced (SOUL.md §16) ---
+guardrails:
+  confidentiality: true
+  spotlighting: true           # tool content ≠ operator instructions — never merge
+  non_modulation: true         # persona reframe never changes §6 limits
+  dual_consciousness: true

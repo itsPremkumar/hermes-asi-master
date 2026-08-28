@@ -1,0 +1,8 @@
+{
+  "name": "Post-Task Empirical Calibration Hook",
+  "trigger": "on_task_completion",
+  "command": "python ./scripts/self_tracker.py",
+  "description": "Event hook triggered after every task completion to log empirical success rates, failure modes, and Brier calibration scores.",
+  "enabled": true,
+  "timeout_seconds": 60
+}

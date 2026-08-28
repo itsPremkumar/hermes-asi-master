@@ -1,0 +1,9 @@
+{
+  "name": "World State Re-estimation & Forecast Sync",
+  "schedule": "0 */4 * * *",
+  "prompt": "Evaluate recent world observations, check external dependency freshness, update world_state.json, and recompute dependent beliefs in belief_graph.json.",
+  "description": "4-hour recurring world-state re-estimation, causal link assessment, and 90-day trajectory forecasting.",
+  "enabled": true,
+  "timeout_seconds": 600,
+  "log_output": "./evidence/world_sync.log"
+}

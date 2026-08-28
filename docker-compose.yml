@@ -1,0 +1,30 @@
+# docker-compose.yml — HERMES Advanced
+# One-command Hermes with Docker backend (most sandboxed)
+
+services:
+  hermes:
+    build: .
+    container_name: hermes-advanced
+    volumes:
+      # Project workspace (Hermes sees this as project root)
+      - .:/home/hermes/project
+      # Hermes home (persist SOUL.md, MEMORY.md, USER.md, config.yaml, skills)
+      - hermes-home:/home/hermes/.hermes
+      # Git worktrees need sibling dirs — mount parent if using worktrees
+      # - ../:/home/hermes/work:ro
+    environment:
+      # Secrets from host .env — never bake into image
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+    stdin_open: true
+    tty: true
+    # For Hermes gateway (Telegram, Discord, etc.)
+    ports:
+      - "8000:8000"
+    command: hermes
+    restart: unless-stopped
+
+volumes:
+  hermes-home:

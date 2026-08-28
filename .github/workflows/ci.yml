@@ -1,0 +1,57 @@
+# CI — HERMES Advanced
+# Validates Hermes skills per official creating-skills guide: frontmatter, structure, no secrets
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  hermes-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check SKILL.md frontmatter
+        run: |
+          echo "Checking all SKILL.md have required frontmatter (name, description, version)..."
+          for f in $(find skills -name "SKILL.md"); do
+            echo "Checking $f"
+            grep -q "^name:" "$f" || (echo "Missing name in $f" && exit 1)
+            grep -q "^description:" "$f" || (echo "Missing description in $f" && exit 1)
+            grep -q "^version:" "$f" || (echo "Missing version in $f" && exit 1)
+          done
+          echo "All SKILL.md frontmatter OK"
+
+      - name: Check SOUL.md exists
+        run: test -f SOUL.md && echo "SOUL.md OK" || (echo "Missing SOUL.md" && exit 1)
+
+      - name: Check AGENTS.md exists
+        run: test -f AGENTS.md && echo "AGENTS.md OK" || (echo "Missing AGENTS.md" && exit 1)
+
+      - name: Check no secrets in repo
+        run: |
+          echo "Checking for leaked secrets (allow .env.example, forbid .env with real keys)..."
+          if grep -r "sk-ant\|sk-proj\|ghp_\|ANTHROPIC_API_KEY=sk-" --include="*.md" --include="*.yaml" --include="*.yml" . 2>/dev/null | grep -v ".env.example" | grep -v "REPLACE_ME"; then
+            echo "Potential leaked secret found!" && exit 1
+          fi
+          echo "No leaked secrets"
+
+      - name: Check no C:\Users paths (personal info)
+        run: |
+          if grep -r "C:\\\\Users" --include="*.md" --include="*.yaml" . 2>/dev/null | grep -v "00-ORIGINAL"; then
+            echo "Found personal path C:\Users — replace with generic" && exit 1
+          fi
+          echo "No personal paths"
+
+      - name: Validate Hermit skill structure
+        run: |
+          echo "Checking skill directories follow skills/<category>/<skill>/SKILL.md..."
+          for dir in skills/*/; do
+            test -f "${dir}SKILL.md" || (echo "Missing SKILL.md in $dir" && exit 1)
+            echo "OK: $dir"
+          done
+          echo "All skill directories OK"

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "2.0.0",
+  "last_updated": "2026-08-28T17:10:30.993789Z",
+  "beliefs": {
+    "BELIEF-001": {
+      "claim": "Hermes Agent requires >=64K context window for optimal multi-agent swarm operations",
+      "status": "fact",
+      "prior": 0.5,
+      "posterior": 0.97,
+      "evidence_count": 12,
+      "independent_sources": 5,
+      "contradiction_count": 0,
+      "dependent_beliefs": [
+        "BELIEF-003",
+        "BELIEF-007"
+      ],
+      "last_verified": "2026-08-28T20:00:00Z",
+      "provenance": [
+        "nousresearch.com/docs",
+        "github.com/nousresearch/hermes-agent"
+      ]
+    },
+    "BELIEF-002": {
+      "claim": "Browser full page extraction reduces research error rate by over 70% compared to snippet-only search",
+      "status": "fact",
+      "prior": 0.6,
+      "posterior": 0.94,
+      "evidence_count": 8,
+      "independent_sources": 4,
+      "contradiction_count": 0,
+      "dependent_beliefs": [
+        "BELIEF-005"
+      ],
+      "last_verified": "2026-08-28T21:00:00Z",
+      "provenance": [
+        "BrowseComp 2026 Benchmark",
+        "Hermes Empirical Research Logs"
+      ]
+    },
+    "BELIEF-003": {
+      "claim": "Letta-style 13-step sleep-time compute enables continuous skill improvement without catastrophic forgetting",
+      "status": "strongly_supported",
+      "prior": 0.9568,
+      "posterior": 0.99,
+      "evidence_count": 6,
+      "independent_sources": 3,
+      "contradiction_count": 0,
+      "dependent_beliefs": [
+        "BELIEF-008"
+      ],
+      "last_verified": "2026-08-28T21:30:00Z",
+      "provenance": [
+        "Letta Technical Report 2026",
+        "Voyager Lifelong Learning Framework"
+      ]
+    },
+    "TEST-CLAIM-01": {
+      "claim": "Testing Bayesian ingestion",
+      "status": "strongly_supported",
+      "prior": 0.5,
+      "posterior": 0.9259,
+      "evidence_count": 5,
+      "independent_sources": 5,
+      "contradiction_count": 0,
+      "dependent_beliefs": [],
+      "last_verified": "2026-08-28T17:10:30.991525Z",
+      "provenance": [
+        "test_source"
+      ]
+    }
+  }
+}

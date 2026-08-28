@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "last_updated": "2026-08-28T17:10:32.576201Z",
+  "currency": "USD",
+  "monthly_budget": 100.0,
+  "current_month_spend": 12.465,
+  "token_usage_total": {
+    "input_tokens": 1421500,
+    "output_tokens": 384700,
+    "reasoning_tokens": 120800
+  },
+  "cost_breakdown_by_provider": {
+    "anthropic": 8.215,
+    "deepseek": 2.15,
+    "openrouter": 2.1,
+    "ollama_local": 0.0
+  },
+  "missions_budget_ledger": [
+    {
+      "mission_id": "MISSION-001",
+      "allocated_budget": 5.0,
+      "actual_spend": 1.15,
+      "status": "under_budget"
+    }
+  ]
+}

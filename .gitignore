@@ -1,0 +1,79 @@
+# HERMES Advanced — .gitignore
+# Hermes-native ignores — keeps secrets, worktrees, and runtime out of git
+
+# ── Secrets (NEVER commit) ──────────────────────────────────────────
+.env
+*.env
+!.env.example
+auth.json
+*_token.json
+*_secret.json
+google_token.json
+google_client_secret.json
+*.pem
+*.key
+
+# ── Hermes Runtime ──────────────────────────────────────────────────
+.hermes/
+sessions.db
+checkpoints/
+*.db
+*.sqlite
+
+# ── Git Worktrees (Hermes parallel work) ────────────────────────────
+.worktrees/
+hermes-worktree-*
+.delegate/
+.delegate/
+
+# ── Evidence & Synthesis Output (per-task, not repo) ────────────────
+evidence/
+synthesis-output/
+integration/
+staging/
+prototype/
+.hermes-worktree-*
+
+# ── Python ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+.env/
+*.egg-info/
+dist/
+build/
+
+# ── Node ────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+
+# ── OS ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ── IDE ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.code-workspace
+.cursor/
+
+# ── Logs ────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Docker ──────────────────────────────────────────────────────────
+.dockerignore
+
+*.bak
+*.tmp
