@@ -16,7 +16,7 @@ terminal:
 memory:
   memory_enabled: true
   user_profile_enabled: true
-  memory_char_limit: 8000
+  memory_char_limit: 5000
   user_char_limit: 4000
   write_approval: true
   ttl_default_days: 90
@@ -126,3 +126,32 @@ economic_guardrails:
   max_monthly_budget_usd: 100.0
   hard_stop_on_budget_exceeded: true
   fallback_to_local_on_exhaustion: true
+tools:
+  tool_search:
+    enabled: auto
+    threshold_pct: 10
+    search_default_limit: 5
+    max_search_limit: 20
+platforms:
+  telegram:
+    enabled: false
+    bot_token: ${TELEGRAM_BOT_TOKEN}
+    allowlist: []
+  discord:
+    enabled: false
+    bot_token: ${DISCORD_BOT_TOKEN}
+    channel_id: ''
+  slack:
+    enabled: false
+    bot_token: ${SLACK_BOT_TOKEN}
+    app_token: ${SLACK_APP_TOKEN}
+  whatsapp:
+    enabled: false
+    phone_number_id: ''
+  signal:
+    enabled: false
+    phone_number: ''
+  matrix:
+    enabled: false
+    homeserver: ''
+    user_id: ''

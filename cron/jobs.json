@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "jobs": [
+    {
+      "id": "job-01-nightly-dream",
+      "name": "Nightly 13-Step Letta Dream Cycle",
+      "schedule": "0 2 * * *",
+      "command": "python ~/.hermes/profiles/hermes-asi-bot/scripts/sleep_cycle_runner.py --dry-run",
+      "enabled": true
+    },
+    {
+      "id": "job-02-world-sync",
+      "name": "4-Hour World Model & Forecast Sync",
+      "schedule": "0 */4 * * *",
+      "command": "python ~/.hermes/profiles/hermes-asi-bot/scripts/state_engine.py --validate",
+      "enabled": true
+    },
+    {
+      "id": "job-03-curriculum-sync",
+      "name": "Weekly SIMA 2 Curriculum Self-Improvement",
+      "schedule": "0 0 * * 0",
+      "command": "python ~/.hermes/profiles/hermes-asi-bot/scripts/curriculum_picker.py",
+      "enabled": true
+    },
+    {
+      "id": "job-04-weekly-gepa-evolution",
+      "name": "Sunday DSPy + GEPA Genetic Prompt Evolution",
+      "schedule": "0 3 * * 0",
+      "command": "python ~/.hermes/profiles/hermes-asi-bot/scripts/gepa_evolution_engine.py --evolve --threshold 0.90",
+      "enabled": true
+    }
+  ]
+}
