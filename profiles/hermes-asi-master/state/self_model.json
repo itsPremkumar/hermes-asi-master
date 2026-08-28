@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "2.0.0",
-  "last_updated": "2026-08-28T17:10:31.082391Z",
+  "last_updated": "2026-08-28T18:02:41.405562Z",
   "agent_id": "hermes-asi-master",
-  "overall_calibration_brier": 0.0296,
+  "overall_calibration_brier": 0.0271,
   "domains": {
     "python_backend": {
       "confidence": 0.92,
@@ -46,7 +46,7 @@
     "test_domain": {
       "confidence": 0.9,
       "empirical_success": 1.0,
-      "sample_count": 5,
+      "sample_count": 6,
       "recent_delta": 0.0,
       "known_failure_modes": []
     }
@@ -98,6 +98,12 @@
     },
     {
       "timestamp": "2026-08-28T17:10:31.081324Z",
+      "predicted": 0.9,
+      "actual": 1.0,
+      "brier": 0.01
+    },
+    {
+      "timestamp": "2026-08-28T18:02:41.169478Z",
       "predicted": 0.9,
       "actual": 1.0,
       "brier": 0.01

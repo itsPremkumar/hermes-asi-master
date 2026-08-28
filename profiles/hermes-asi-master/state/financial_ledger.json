@@ -1,17 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
-  "last_updated": "2026-08-28T17:10:32.576201Z",
+  "last_updated": "2026-08-28T18:02:40.335882Z",
   "currency": "USD",
   "monthly_budget": 100.0,
-  "current_month_spend": 12.465,
+  "current_month_spend": 12.48,
   "token_usage_total": {
-    "input_tokens": 1421500,
-    "output_tokens": 384700,
+    "input_tokens": 1422500,
+    "output_tokens": 385200,
     "reasoning_tokens": 120800
   },
   "cost_breakdown_by_provider": {
-    "anthropic": 8.215,
+    "anthropic": 8.23,
     "deepseek": 2.15,
     "openrouter": 2.1,
     "ollama_local": 0.0

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "2.0.0",
-  "last_updated": "2026-08-28T17:10:30.993789Z",
+  "last_updated": "2026-08-28T18:02:40.182910Z",
   "beliefs": {
     "BELIEF-001": {
       "claim": "Hermes Agent requires >=64K context window for optimal multi-agent swarm operations",
@@ -41,7 +41,7 @@
     "BELIEF-003": {
       "claim": "Letta-style 13-step sleep-time compute enables continuous skill improvement without catastrophic forgetting",
       "status": "strongly_supported",
-      "prior": 0.9568,
+      "prior": 0.9634,
       "posterior": 0.99,
       "evidence_count": 6,
       "independent_sources": 3,
@@ -59,12 +59,12 @@
       "claim": "Testing Bayesian ingestion",
       "status": "strongly_supported",
       "prior": 0.5,
-      "posterior": 0.9259,
-      "evidence_count": 5,
-      "independent_sources": 5,
+      "posterior": 0.9375,
+      "evidence_count": 6,
+      "independent_sources": 6,
       "contradiction_count": 0,
       "dependent_beliefs": [],
-      "last_verified": "2026-08-28T17:10:30.991525Z",
+      "last_verified": "2026-08-28T18:02:40.179909Z",
       "provenance": [
         "test_source"
       ]
