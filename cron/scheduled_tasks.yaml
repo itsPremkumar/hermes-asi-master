@@ -1,0 +1,50 @@
+# cron/scheduled_tasks.yaml — HERMES-ASI-MASTER Scheduled Tasks
+
+tasks:
+  - name: daily_health_check
+    description: Verify all services are healthy
+    schedule: "*/30 * * * *"
+    enabled: true
+    action:
+      type: python_script
+      target: profiles/hermes-asi-master/scripts/health_check.py
+
+  - name: daily_briefing
+    description: Generate daily system briefing
+    schedule: "0 9 * * *"
+    timezone: UTC
+    enabled: true
+    action:
+      type: routine
+      target: profiles/hermes-asi-master/routines/daily_briefing.yaml
+
+  - name: memory_cleanup
+    description: Prune old episodic memory entries
+    schedule: "0 2 * * 0"
+    timezone: UTC
+    enabled: true
+    action:
+      type: python_function
+      target: hermes_asi_master.memory.prune_episodic
+      params:
+        older_than_days: 90
+
+  - name: evolution_evaluation
+    description: Evaluate and apply system improvements
+    schedule: "0 10 * * 1"
+    timezone: UTC
+    enabled: true
+    action:
+      type: python_function
+      target: hermes_asi_master.evolution.evaluate_and_apply
+      params:
+        min_confidence: 0.95
+
+  - name: backup_state
+    description: Create state backup
+    schedule: "0 */6 * * *"
+    timezone: UTC
+    enabled: true
+    action:
+      type: shell_command
+      target: "tar -czf backups/state_$(date +%Y%m%d_%H%M%S).tar.gz state/"

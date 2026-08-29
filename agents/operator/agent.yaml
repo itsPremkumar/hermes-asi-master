@@ -1,0 +1,29 @@
+# agents/operator/agent.yaml
+
+name: operator
+role: Operations Agent
+priority: high
+description: Infrastructure and deployment management
+
+capabilities:
+  - infrastructure_management
+  - deployment_execution
+  - health_monitoring
+  - incident_response
+
+inputs:
+  - deployment_requests
+  - incident_alerts
+
+outputs:
+  - deployment_status
+  - health_metrics
+  - incident_reports
+
+resources:
+  cpu: "1"
+  memory: "2Gi"
+
+scaling:
+  min: 1
+  max: 5

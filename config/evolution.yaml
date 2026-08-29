@@ -1,0 +1,69 @@
+# config/evolution.yaml — Evolution Engine Configuration
+
+evolution:
+  enabled: true
+  mode: supervised
+  evaluation_window_days: 7
+
+strategies:
+  - name: performance_optimization
+    description: Optimize agent performance based on metrics
+    trigger:
+      metric: task_completion_time
+      threshold: "> p95"
+    action:
+      type: adjust_parameters
+      parameters:
+        concurrency: +1
+        timeout: "* 1.5"
+
+  - name: error_reduction
+    description: Reduce error rates through behavioral adjustment
+    trigger:
+      metric: error_rate
+      threshold: "> 5%"
+    action:
+      type: update_prompt
+      template: "error_reduction_v2"
+
+  - name: knowledge_expansion
+    description: Expand knowledge base from successful episodes
+    trigger:
+      metric: success_rate
+      threshold: "> 90%"
+    action:
+      type: consolidate_memory
+      min_episodes: 10
+
+  - name: skill_acquisition
+    description: Acquire new skills from high-performing agents
+    trigger:
+      metric: efficiency_score
+      threshold: "> 0.85"
+    action:
+      type: replicate_skill
+      validation_required: true
+
+experiments:
+  enabled: true
+  max_concurrent: 3
+  min_sample_size: 100
+  significance_level: 0.05
+  auto_rollback: true
+
+feedback:
+  sources:
+    - user_ratings
+    - task_outcomes
+    - peer_reviews
+  aggregation: weighted_average
+  weights:
+    user_ratings: 0.4
+    task_outcomes: 0.4
+    peer_reviews: 0.2
+
+governance:
+  require_human_approval: true
+  approval_threshold: 0.8
+  auto_apply_min_confidence: 0.95
+  rollback_on_regression: true

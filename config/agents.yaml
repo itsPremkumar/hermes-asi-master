@@ -1,0 +1,95 @@
+# config/agents.yaml — Agent Fleet Configuration
+
+agents:
+  orchestrator:
+    enabled: true
+    max_concurrent: 5
+    priority: critical
+    resources:
+      cpu: "2"
+      memory: "4Gi"
+    scaling:
+      min: 1
+      max: 3
+
+  researcher:
+    enabled: true
+    max_concurrent: 10
+    priority: high
+    resources:
+      cpu: "1"
+      memory: "2Gi"
+    scaling:
+      min: 2
+      max: 8
+
+  engineer:
+    enabled: true
+    max_concurrent: 10
+    priority: high
+    resources:
+      cpu: "2"
+      memory: "4Gi"
+    scaling:
+      min: 2
+      max: 10
+
+  operator:
+    enabled: true
+    max_concurrent: 5
+    priority: high
+    resources:
+      cpu: "1"
+      memory: "2Gi"
+    scaling:
+      min: 1
+      max: 5
+
+  quality:
+    enabled: true
+    max_concurrent: 8
+    priority: medium
+    resources:
+      cpu: "1"
+      memory: "2Gi"
+    scaling:
+      min: 1
+      max: 5
+
+  curator:
+    enabled: true
+    max_concurrent: 5
+    priority: medium
+    resources:
+      cpu: "0.5"
+      memory: "1Gi"
+    scaling:
+      min: 1
+      max: 3
+
+  guardian:
+    enabled: true
+    max_concurrent: 20
+    priority: critical
+    resources:
+      cpu: "0.5"
+      memory: "1Gi"
+    scaling:
+      min: 2
+      max: 6
+
+  evolver:
+    enabled: true
+    max_concurrent: 3
+    priority: low
+    resources:
+      cpu: "2"
+      memory: "4Gi"
+    scaling:
+      min: 1
+      max: 2
+
+health_checks:
+  interval_seconds: 30
+  timeout_seconds: 5
+  unhealthy_threshold: 3

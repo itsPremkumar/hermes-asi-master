@@ -1,0 +1,72 @@
+# config/system.yaml — HERMES-ASI-MASTER Core Configuration
+
+system:
+  name: hermes-asi-master
+  version: 1.0.0
+  environment: production
+  log_level: INFO
+
+orchestrator:
+  max_concurrent_tasks: 50
+  task_timeout_seconds: 300
+  retry_policy:
+    max_retries: 3
+    backoff_multiplier: 2
+    initial_delay_seconds: 5
+
+memory:
+  working:
+    backend: redis
+    host: localhost
+    port: 6379
+    max_tokens: 10000
+  episodic:
+    backend: postgresql
+    host: localhost
+    port: 5432
+    database: hermes_memory
+    retention_days: 90
+  semantic:
+    backend: pgvector
+    host: localhost
+    port: 5432
+    database: hermes_vectors
+    embedding_model: text-embedding-3-large
+    dimensions: 3072
+  procedural:
+    backend: filesystem
+    path: ./memory/procedural
+  prospective:
+    backend: cron
+    store: redis
+
+fleet:
+  max_agents: 100
+  scaling:
+    min_instances: 2
+    max_instances: 20
+    target_cpu_utilization: 70
+
+security:
+  encryption:
+    algorithm: AES-256-GCM
+    key_rotation_days: 30
+  authentication:
+    method: oauth2
+    token_expiry_minutes: 60
+  authorization:
+    model: rbac
+    policy_file: config/safety.yaml
+
+monitoring:
+  metrics:
+    backend: prometheus
+    port: 9090
+  logging:
+    backend: elasticsearch
+    host: localhost
+    port: 9200
+  tracing:
+    backend: jaeger
+    host: localhost
+    port: 16686

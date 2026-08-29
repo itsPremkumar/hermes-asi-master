@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "2.0.0",
+  "last_updated": "2026-08-29T03:56:39.246552Z",
+  "agent_id": "hermes-asi-master",
+  "overall_calibration_brier": 0.0271,
+  "domains": {
+    "python_backend": {
+      "confidence": 0.92,
+      "empirical_success": 0.89,
+      "sample_count": 164,
+      "recent_delta": 0.02,
+      "known_failure_modes": [
+        "async_race_conditions",
+        "windows_path_escaping"
+      ]
+    },
+    "web_research_superintelligence": {
+      "confidence": 0.96,
+      "empirical_success": 0.95,
+      "sample_count": 240,
+      "recent_delta": 0.01,
+      "known_failure_modes": [
+        "outdated_seo_blog_citations",
+        "missing_counter_evidence_query"
+      ]
+    },
+    "formal_verification_and_testing": {
+      "confidence": 0.9,
+      "empirical_success": 0.88,
+      "sample_count": 98,
+      "recent_delta": 0.03,
+      "known_failure_modes": [
+        "unhandled_ast_syntax_variants"
+      ]
+    },
+    "git_swarm_worktrees": {
+      "confidence": 0.94,
+      "empirical_success": 0.92,
+      "sample_count": 115,
+      "recent_delta": 0.01,
+      "known_failure_modes": [
+        "unmerged_worktree_dangling_locks"
+      ]
+    },
+    "test_domain": {
+      "confidence": 0.9,
+      "empirical_success": 1.0,
+      "sample_count": 6,
+      "recent_delta": 0.0,
+      "known_failure_modes": []
+    }
+  },
+  "tool_reliability": {
+    "web_search": 0.97,
+    "browser": 0.92,
+    "file_read": 0.99,
+    "file_write": 0.99,
+    "terminal_exec": 0.91,
+    "subagents": 0.89
+  },
+  "calibration_history": [
+    {
+      "timestamp": "2026-08-28T12:00:00Z",
+      "predicted": 0.9,
+      "actual": 0.89,
+      "brier": 0.081
+    },
+    {
+      "timestamp": "2026-08-28T18:00:00Z",
+      "predicted": 0.92,
+      "actual": 0.91,
+      "brier": 0.076
+    },
+    {
+      "timestamp": "2026-08-28T17:02:42.671856Z",
+      "predicted": 0.9,
+      "actual": 1.0,
+      "brier": 0.01
+    },
+    {
+      "timestamp": "2026-08-28T17:03:01.226203Z",
+      "predicted": 0.9,
+      "actual": 1.0,
+      "brier": 0.01
+    },
+    {
+      "timestamp": "2026-08-28T17:04:09.203184Z",
+      "predicted": 0.9,
+      "actual": 1.0,
+      "brier": 0.01
+    },
+    {
+      "timestamp": "2026-08-28T17:10:16.163245Z",
+      "predicted": 0.9,
+      "actual": 1.0,
+      "brier": 0.01
+    },
+    {
+      "timestamp": "2026-08-28T17:10:31.081324Z",
+      "predicted": 0.9,
+      "actual": 1.0,
+      "brier": 0.01
+    },
+    {
+      "timestamp": "2026-08-28T18:02:41.169478Z",
+      "predicted": 0.9,
+      "actual": 1.0,
+      "brier": 0.01
+    }
+  ]
+}

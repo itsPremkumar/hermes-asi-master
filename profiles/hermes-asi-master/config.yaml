@@ -1,0 +1,166 @@
+provider: nous
+model: meituan/longcat-2.0:free
+reasoning_effort: high
+context_window: 200000
+temperature: 0.2
+max_tokens: 8192
+terminal:
+  backend: local
+  timeout_seconds: 180
+  max_output_bytes: 102400
+  container_image: hermes-sandbox:latest
+  auto_cleanup: true
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 5000
+  user_char_limit: 4000
+  write_approval: true
+  ttl_default_days: 90
+  provenance_required: true
+  spotlighting: true
+  fts5_index_enabled: true
+toolsets:
+  enabled:
+  - web_search
+  - browser
+  - file_read
+  - file_write
+  - terminal_exec
+  - subagents
+  health_check: true
+search:
+  default_results: 10
+  max_parallel_searches: 5
+  timeout_seconds: 45
+  freshness_preference: high
+  language: en
+  evidence_persistence: true
+  browser_render_top_k: 3
+cognitive_engines:
+  state_sync_enabled: true
+  self_tracking_enabled: true
+  belief_cascade_enabled: true
+  sleep_cycle_cron: 0 2 * * *
+  world_reestimate_cron: 0 */4 * * *
+  curriculum_sync_cron: 0 0 * * 0
+permissions:
+  default_policy: deny
+  approval_required_for:
+  - R4
+  - R5
+  - R6
+  auto_approve:
+  - R0
+  - R1
+  - R2
+  audit_log: true
+  least_privilege: true
+  spotlighting: true
+sandbox:
+  enabled: true
+  filesystem_policy: restricted
+  network_policy: limited
+  process_policy: contained
+  resource_limits:
+    memory_mb: 4096
+    cpu_percent: 85
+    timeout_seconds: 600
+  attestation: true
+agents:
+  max_depth: 4
+  max_fanout: 8
+  default_budget_tokens: 16000
+  default_timeout_seconds: 300
+  require_termination_condition: true
+  isolation: true
+logging:
+  level: info
+  structured: true
+  include_provenance: true
+  redact_secrets: true
+  retention_days: 60
+  evidence_log: true
+fallback_providers:
+- provider: nous
+  model: poolside/laguna-s-2.1:free
+- provider: opencode-zen
+  model: opencode:deepseek-v4-flash-free
+- provider: openrouter
+  model: meta-llama/llama-3.3-70b-instruct:free
+- provider: openrouter
+  model: google/gemini-2.0-flash-exp:free
+- provider: openrouter
+  model: qwen/qwen-2.5-coder-32b-instruct:free
+- provider: opencode-zen
+  model: kilocode:stepfun/step-3.7-flash:free
+- provider: opencode-zen
+  model: kilocode:minimax/minimax-m2.5:free
+- provider: opencode-zen
+  model: kilocode:nvidia/nemotron-3-super-120b-a12b:free
+- provider: opencode-zen
+  model: kilocode:arcee-ai/trinity-large-preview:free
+- provider: tokenrouter
+  model: moonshotai/kimi-k3-free
+- provider: huggingface
+  model: Qwen/Qwen2.5-Coder-32B-Instruct
+- provider: ollama-launch
+  model: RefinedNeuro/vibethinker-3b-hermes
+agent:
+  reasoning_effort: ultra
+hooks:
+  on_session_start: python scripts/state_engine.py --validate
+  on_turn_end: python scripts/self_tracker.py --sync
+  on_tool_call: python scripts/formal_verifier.py --gate
+mcp_servers:
+  formal-prover:
+    command: python
+    args:
+    - scripts/formal_prover_mcp.py
+    enabled: true
+economic_guardrails:
+  max_daily_budget_usd: 5.0
+  max_monthly_budget_usd: 100.0
+  hard_stop_on_budget_exceeded: true
+  fallback_to_local_on_exhaustion: false
+tools:
+  tool_search:
+    enabled: auto
+    threshold_pct: 10
+    search_default_limit: 5
+    max_search_limit: 20
+platforms:
+  telegram:
+    enabled: false
+    bot_token: ${TELEGRAM_BOT_TOKEN}
+    allowlist: []
+  discord:
+    enabled: false
+    bot_token: ${DISCORD_BOT_TOKEN}
+    channel_id: ''
+  slack:
+    enabled: false
+    bot_token: ${SLACK_BOT_TOKEN}
+    app_token: ${SLACK_APP_TOKEN}
+  whatsapp:
+    enabled: false
+    phone_number_id: ''
+  signal:
+    enabled: false
+    phone_number: ''
+  matrix:
+    enabled: false
+    homeserver: ''
+    user_id: ''
+fallback_models:
+- poolsnoot/laguna-s-2.1:free
+- deepseek-v4-flash-free
+- meta-llama/llama-3.3-70b-instruct:free
+- google/gemini-2.0-flash-exp:free
+- qwen/qwen-2.5-coder-32b-instruct:free
+- stepfun/step-3.7-flash:free
+- minimax/minimax-m2.5:free
+- nvidia/nemotron-3-super-120b:free
+- arcee-ai/trinity-large-preview:free
+- moonshotai/kimi-k3-free
+- huggingface/Qwen/Qwen2.5-Coder-32B-Instruct

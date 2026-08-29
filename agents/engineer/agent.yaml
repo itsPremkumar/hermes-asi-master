@@ -1,0 +1,29 @@
+# agents/engineer/agent.yaml
+
+name: engineer
+role: Engineering Agent
+priority: high
+description: Code generation and system implementation
+
+capabilities:
+  - code_generation
+  - test_writing
+  - code_review
+  - documentation
+
+inputs:
+  - implementation_specs
+  - bug_reports
+
+outputs:
+  - code_diffs
+  - test_results
+  - documentation
+
+resources:
+  cpu: "2"
+  memory: "4Gi"
+
+scaling:
+  min: 2
+  max: 10

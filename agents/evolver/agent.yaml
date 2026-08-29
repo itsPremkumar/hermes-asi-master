@@ -1,0 +1,28 @@
+# agents/evolver/agent.yaml
+
+name: evolver
+role: Evolution Agent
+priority: low
+description: System self-improvement and adaptation
+
+capabilities:
+  - performance_analysis
+  - improvement_proposals
+  - experiment_execution
+  - behavior_updates
+
+inputs:
+  - performance_data
+  - improvement_hypotheses
+
+outputs:
+  - improvement_proposals
+  - experiment_results
+
+resources:
+  cpu: "2"
+  memory: "4Gi"
+
+scaling:
+  min: 1
+  max: 2

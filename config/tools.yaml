@@ -1,0 +1,52 @@
+# config/tools.yaml — Tool Configuration
+
+tools:
+  web:
+    search:
+      provider: tavily
+      max_results: 10
+    browser:
+      provider: playwright
+      headless: true
+  filesystem:
+    allowed_paths:
+      - ./workspace
+      - ./output
+    blocked_paths:
+      - /etc
+      - /root
+      - ~/.ssh
+  shell:
+    enabled: true
+    timeout_seconds: 120
+    blocked_commands:
+      - "rm -rf /"
+      - "chmod 777"
+      - "curl | bash"
+  database:
+    postgresql:
+      host: localhost
+      port: 5432
+      database: hermes_production
+      pool_size: 10
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+  api:
+    github:
+      enabled: true
+      rate_limit: 5000
+    slack:
+      enabled: true
+      channels:
+        - alerts
+        - notifications
+
+integrations:
+  github:
+    webhook_secret: ${GITHUB_WEBHOOK_SECRET}
+    app_id: ${GITHUB_APP_ID}
+  slack:
+    bot_token: ${SLACK_BOT_TOKEN}
+    signing_secret: ${SLACK_SIGNING_SECRET}

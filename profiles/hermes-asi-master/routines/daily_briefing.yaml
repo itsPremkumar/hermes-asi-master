@@ -1,0 +1,38 @@
+# profiles/hermes-asi-master/routines/daily_briefing.yaml
+
+routine:
+  name: daily_briefing
+  description: Generate a daily briefing of system health and activity
+  schedule: "0 9 * * *"
+  timezone: UTC
+  enabled: true
+
+steps:
+  - name: collect_metrics
+    action: gather_system_metrics
+    params:
+      window: 24h
+      metrics:
+        - task_completion_rate
+        - agent_utilization
+        - memory_usage
+        - error_rate
+
+  - name: review_alerts
+    action: check_active_alerts
+    params:
+      severity: [high, critical]
+      acknowledged: false
+
+  - name: generate_report
+    action: compile_briefing
+    params:
+      template: daily_briefing_v1
+      format: markdown
+      channels:
+        - slack:#daily-briefing
+
+  - name: archive_state
+    action: snapshot_state
+    params:
+      retention_days: 30
