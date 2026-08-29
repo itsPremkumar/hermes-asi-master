@@ -4,10 +4,14 @@
 no_agent cron script. Silent when healthy; prints an alert ONLY when something
 is broken (watchdog pattern). Also rewrites the ops dashboard HTML every tick.
 """
-import json, os, datetime
+import json, os, datetime, sys
+import urllib.request
 
-LOCALAPPDATA = os.environ.get("LOCALAPPDATA", os.path.expanduser("~") + "/AppData/Local")
-HERMES = os.path.join(LOCALAPPDATA, "hermes")
+HERMES = os.environ.get("HERMES_HOME") or (
+    os.path.join(os.environ.get("LOCALAPPDATA"), "hermes")
+    if sys.platform == "win32" and os.environ.get("LOCALAPPDATA")
+    else os.path.expanduser("~/.hermes")
+)
 JOBS = os.path.join(HERMES, "cron", "jobs.json")
 DASH = os.path.join(HERMES, "ops-dashboard.html")
 

@@ -3,7 +3,11 @@
 Releases ONE blocked card per tick only when nothing is running. Silent unless failing."""
 import json, os, sqlite3, subprocess, sys, time
 
-HERMES = os.path.join(os.environ.get("LOCALAPPDATA",""), "hermes")
+HERMES = os.environ.get("HERMES_HOME") or (
+    os.path.join(os.environ.get("LOCALAPPDATA"), "hermes")
+    if sys.platform == "win32" and os.environ.get("LOCALAPPDATA")
+    else os.path.expanduser("~/.hermes")
+)
 DB = os.path.join(HERMES, "kanban", "boards", "it-company-ops", "kanban.db")
 
 def q(sql):

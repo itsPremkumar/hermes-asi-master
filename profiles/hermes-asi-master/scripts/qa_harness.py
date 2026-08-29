@@ -24,7 +24,11 @@ Checks (each independent, failures accumulate):
 Exit 0 = PASS, exit 1 = FAIL (with per-check detail printed).
 """
 import os, re, subprocess, sys, py_compile
-HERMES = os.path.expandvars(r"%LOCALAPPDATA%\hermes")
+HERMES = os.environ.get("HERMES_HOME") or (
+    os.path.join(os.environ.get("LOCALAPPDATA"), "hermes")
+    if sys.platform == "win32" and os.environ.get("LOCALAPPDATA")
+    else os.path.expanduser("~/.hermes")
+)
 
 SKIP_DIRS = {"venv", ".venv", "node_modules", "__pycache__", ".git", "dist", "build"}
 SECRET_PAT = re.compile(r"(sk-[A-Za-z0-9]{16,}|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]{10,})")
@@ -36,11 +40,16 @@ def walk(root):
             yield os.path.join(dirpath, f)
 
 def main():
+    if "--help" in sys.argv or "-h" in sys.argv:
+        print(__doc__)
+        return 0
     if len(sys.argv) < 2:
-        print("usage: qa_harness.py <project_dir>"); return 1
+        print("usage: qa_harness.py <project_dir>")
+        return 1
     root = os.path.abspath(sys.argv[1])
     if not os.path.isdir(root):
-        print(f"FAIL: not a directory: {root}"); return 1
+        print(f"FAIL: not a directory: {root}")
+        return 1
 
     results, failed = [], False
     pys = [f for f in walk(root) if f.endswith(".py")]
@@ -48,13 +57,18 @@ def main():
     # 1. compile
     bad = []
     for f in pys:
-        try: py_compile.compile(f, doraise=True)
-        except Exception as e: bad.append(f"{os.path.relpath(f, root)}: {e}")
-    ok = not bad; failed |= not ok
+        try:
+            py_compile.compile(f, doraise=True)
+        except Exception as e:
+            bad.append(f"{os.path.relpath(f, root)}: {e}")
+    ok = not bad
+    failed |= not ok
     results.append(("COMPILE", ok, f"{len(pys)} files checked" + (f"; {len(bad)} broken" if bad else "")))
 
     # 2a. pytest / test files — per-project roots so package imports resolve
-    _venv_py = os.path.join(os.environ.get("LOCALAPPDATA",""), "hermes", "hermes-agent", "venv", "Scripts", "python.exe")
+    _venv_scripts = "Scripts" if sys.platform == "win32" else "bin"
+    _py_name = "python.exe" if sys.platform == "win32" else "python"
+    _venv_py = os.path.join(HERMES, "hermes-agent", "venv", _venv_scripts, _py_name)
     _py_exe = _venv_py if os.path.isfile(_venv_py) else sys.executable
     project_roots = []
     for dp, ds, files in os.walk(root):

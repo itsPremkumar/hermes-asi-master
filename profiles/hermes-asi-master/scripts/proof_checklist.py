@@ -14,10 +14,15 @@ Exit codes: 0 = all proofs pass | 6 = VETO (failures) | 7 = no checklist
 """
 import hashlib, json, os, re, sqlite3, subprocess, sys, time
 
-HERMES = os.path.join(os.environ.get("LOCALAPPDATA", ""), "hermes")
+HERMES = os.environ.get("HERMES_HOME") or (
+    os.path.join(os.environ.get("LOCALAPPDATA"), "hermes")
+    if sys.platform == "win32" and os.environ.get("LOCALAPPDATA")
+    else os.path.expanduser("~/.hermes")
+)
 DB = os.path.join(HERMES, "kanban", "boards", "it-company-ops", "kanban.db")
 WS_ROOT = os.path.join(HERMES, "kanban", "boards", "it-company-ops", "workspaces")
-SCRIPTS = os.path.join(HERMES, "profiles", "bunny", "scripts")
+PROFILE_NAME = os.environ.get("HERMES_PROFILE", "hermes-asi-master")
+SCRIPTS = os.path.join(HERMES, "profiles", PROFILE_NAME, "scripts")
 
 # ---------- db ----------
 def get_card(card_id):
@@ -185,8 +190,12 @@ def cmd_list(card_id):
     return 0
 
 def main():
+    if "--help" in sys.argv or "-h" in sys.argv:
+        print(__doc__)
+        return 0
     if len(sys.argv) < 3:
-        print(__doc__); return 1
+        print(__doc__)
+        return 1
     cmd, card_id = sys.argv[1], sys.argv[2]
     only = sys.argv[3:] if len(sys.argv) > 3 else None
     return {"gen": cmd_gen, "run": lambda c: cmd_run(c, only),

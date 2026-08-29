@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "2.0.0",
-  "last_updated": "2026-08-28T18:02:41.405562Z",
+  "last_updated": "2026-08-29T03:56:39.246552Z",
   "agent_id": "hermes-asi-master",
   "overall_calibration_brier": 0.0271,
   "domains": {
