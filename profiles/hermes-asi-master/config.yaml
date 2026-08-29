@@ -1,0 +1,32 @@
+# profiles/hermes-asi-master/config.yaml — Master Profile Configuration
+
+profile:
+  name: hermes-asi-master
+  description: Master orchestration profile for HERMES-ASI-MASTER platform
+  version: 1.0.0
+
+runtime:
+  python_version: "3.11"
+  max_workers: 10
+  event_loop: asyncio
+  timeout_default_seconds: 300
+
+features:
+  orchestration: true
+  memory_management: true
+  evolution_engine: true
+  safety_governor: true
+  multi_agent: true
+
+paths:
+  state: ./state
+  scripts: ./scripts
+  routines: ./routines
+  logs: ./logs
+  cache: ./cache
+
+logging:
+  level: INFO
+  format: json
+  destination: stdout
+  rotation: daily

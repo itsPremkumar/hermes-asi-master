@@ -1,0 +1,60 @@
+# config/safety.yaml — Safety & Governance Configuration
+
+safety:
+  enabled: true
+  default_policy: deny
+  audit_all_actions: true
+
+policies:
+  - name: no-destructive-commands
+    description: Prevent execution of destructive shell commands
+    action: block
+    conditions:
+      - tool: shell
+        command_pattern: "rm -rf|chmod 777|mkfs|dd if="
+    severity: critical
+
+  - name: no-production-deploy-without-approval
+    description: Require approval for production deployments
+    action: require_approval
+    conditions:
+      - tool: deployment
+        environment: production
+    severity: high
+
+  - name: no-secret-exposure
+    description: Prevent logging or displaying secrets
+    action: block
+    conditions:
+      - output_contains: "API_KEY|SECRET|PASSWORD|TOKEN"
+    severity: critical
+
+  - name: rate-limit-external-calls
+    description: Rate limit external API calls
+    action: throttle
+    conditions:
+      - tool: api
+        calls_per_minute: 100
+    severity: medium
+
+  - name: data-residency
+    description: Ensure data stays within allowed regions
+    action: block
+    conditions:
+      - destination: "non-approved-region"
+    severity: high
+
+approvers:
+  production_deploy:
+    - role: tech_lead
+    - role: sre_oncall
+  infrastructure_changes:
+    - role: platform_lead
+    - role: security_lead
+
+escalation:
+  enabled: true
+  channels:
+    - slack:#incident-response
+    - pagerduty:high-urgency
+  auto_page_after_minutes: 15

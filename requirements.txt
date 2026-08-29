@@ -1,0 +1,43 @@
+# requirements.txt — HERMES-ASI-MASTER Dependencies
+
+# Core
+asyncio>=3.4.3
+aiohttp>=3.9.0
+pydantic>=2.5.0
+PyYAML>=6.0.1
+
+# Memory & Storage
+redis>=5.0.0
+psycopg[binary]>=3.1.0
+pgvector>=0.2.0
+sqlalchemy>=2.0.0
+
+# AI & Embeddings
+anthropic>=0.34.0
+openai>=1.30.0
+
+# Web & APIs
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+httpx>=0.25.0
+
+# Monitoring & Observability
+prometheus-client>=0.19.0
+opentelemetry-api>=1.20.0
+opentelemetry-sdk>=1.20.0
+
+# Security
+cryptography>=41.0.0
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+
+# Utilities
+python-dotenv>=1.0.0
+structlog>=23.2.0
+click>=8.1.0
+rich>=13.7.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0

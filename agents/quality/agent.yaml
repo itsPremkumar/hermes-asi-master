@@ -1,0 +1,29 @@
+# agents/quality/agent.yaml
+
+name: quality
+role: Quality Agent
+priority: medium
+description: Testing and quality assurance
+
+capabilities:
+  - test_design
+  - security_audit
+  - compliance_validation
+  - quality_reporting
+
+inputs:
+  - test_specifications
+  - quality_thresholds
+
+outputs:
+  - test_reports
+  - quality_scores
+  - compliance_status
+
+resources:
+  cpu: "1"
+  memory: "2Gi"
+
+scaling:
+  min: 1
+  max: 5

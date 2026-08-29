@@ -1,0 +1,94 @@
+# docker-compose.yml — HERMES-ASI-MASTER Multi-Service Stack
+
+version: "3.9"
+
+services:
+  hermes-master:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    image: hermes-asi-master:latest
+    container_name: hermes-master
+    ports:
+      - "8080:8080"
+    environment:
+      - ENVIRONMENT=production
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://hermes:hermes@postgres:5432/hermes_production
+      - VECTOR_URL=postgresql://hermes:hermes@postgres:5432/hermes_vectors
+    volumes:
+      - hermes_state:/app/state
+      - hermes_logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "profiles/hermes-asi-master/scripts/health_check.py"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    container_name: hermes-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: hermes-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: hermes
+      POSTGRES_PASSWORD: hermes
+      POSTGRES_DB: hermes_production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hermes"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: hermes-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - hermes-master
+
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: hermes-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: hermes
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+
+volumes:
+  hermes_state:
+  hermes_logs:
+  redis_data:
+  postgres_data:
+  grafana_data:

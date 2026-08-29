@@ -1,0 +1,54 @@
+# .gitignore — HERMES-ASI-MASTER
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+build/
+dist/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env
+.envrc
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Project specific
+logs/
+cache/
+output/
+*.log
+backups/
+state.db
+*.sqlite
+*.sqlite3
+
+# Secrets
+*.pem
+*.key
+*.cert
+secrets/
+
+# Test artifacts
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/

@@ -1,0 +1,29 @@
+# agents/researcher/agent.yaml
+
+name: researcher
+role: Research Agent
+priority: high
+description: Information gathering and analysis
+
+capabilities:
+  - web_search
+  - source_validation
+  - report_synthesis
+  - knowledge_base_maintenance
+
+inputs:
+  - research_queries
+  - investigation_requests
+
+outputs:
+  - research_reports
+  - source_citations
+  - confidence_scores
+
+resources:
+  cpu: "1"
+  memory: "2Gi"
+
+scaling:
+  min: 2
+  max: 8

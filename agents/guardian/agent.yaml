@@ -1,0 +1,28 @@
+# agents/guardian/agent.yaml
+
+name: guardian
+role: Safety Agent
+priority: critical
+description: Policy enforcement and risk management
+
+capabilities:
+  - policy_enforcement
+  - harm_detection
+  - audit_trail_maintenance
+  - violation_escalation
+
+inputs:
+  - action_proposals
+  - policy_definitions
+
+outputs:
+  - approval_decisions
+  - violation_reports
+
+resources:
+  cpu: "0.5"
+  memory: "1Gi"
+
+scaling:
+  min: 2
+  max: 6

@@ -1,0 +1,47 @@
+# config/models.yaml — Model Configuration
+
+models:
+  primary:
+    provider: anthropic
+    model: claude-sonnet-4-20250514
+    max_tokens: 200000
+    temperature: 0.7
+    use_for:
+      - orchestration
+      - reasoning
+      - planning
+  secondary:
+    provider: openai
+    model: gpt-4o
+    max_tokens: 128000
+    temperature: 0.5
+    use_for:
+      - research
+      - analysis
+  embedding:
+    provider: openai
+    model: text-embedding-3-large
+    dimensions: 3072
+    use_for:
+      - semantic_search
+      - memory_indexing
+  vision:
+    provider: anthropic
+    model: claude-sonnet-4-20250514
+    use_for:
+      - image_analysis
+      - screenshot_review
+
+fallback:
+  enabled: true
+  strategy: cascading
+  models:
+    - provider: anthropic
+      model: claude-3-5-sonnet-20241022
+    - provider: openai
+      model: gpt-4o-mini
+
+rate_limiting:
+  requests_per_minute: 1000
+  tokens_per_minute: 200000
+  burst_size: 150
