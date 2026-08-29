@@ -1,0 +1,13 @@
+{
+  "name": "weekly_gepa_skill_evolution",
+  "description": "Weekly automated DSPy + GEPA prompt evolution cycle that benchmarks and mutates low-performing skills on Pareto frontiers",
+  "cron": "0 3 * * 0",
+  "action": {
+    "type": "script",
+    "command": "python scripts/gepa_evolution_engine.py --evolve --threshold 0.90"
+  },
+  "notification": {
+    "platform": "telegram",
+    "deliver_on": "promotion_only"
+  }
+}

@@ -1,99 +1,33 @@
-# MEMORY.md — HERMES-ASI-MASTER Memory Architecture
+# MEMORY.md — Hermes Advanced
 
-## Overview
 
-The HERMES-ASI-MASTER memory system provides persistent, queryable state across all agents and execution episodes. It combines multiple memory types to enable both short-term task context and long-term organizational knowledge.
 
-## Memory Types
+## Durable Facts
 
-### 1. Working Memory
-- **Scope:** Current execution episode
-- **Storage:** In-memory with Redis backing
-- **Retention:** Duration of task + 24h
-- **Capacity:** 10K tokens per agent
+- 2026-08-28: Hermes Advanced v2.0 installed. Ultimate build from 42 source files.
+  Structure: HERMES-Advanced/SKILL.md (v2.0) + SOUL.md (v4.0 ASI) + AGENT.md (Rowan) + 6 modular skills + 3 configs.
 
-### 2. Episodic Memory
-- **Scope:** Historical execution episodes
-- **Storage:** PostgreSQL with JSONB
-- **Retention:** 90 days (configurable)
-- **Indexing:** Full-text search + vector embeddings
+- 2026-08-28: Hermes runtime requirements: model >=64K context, toolsets include web_search+browser+file_read+file_write+terminal_exec (docker), memory 4000 chars, spotlighting enabled.
 
-### 3. Semantic Memory
-- **Scope:** Facts, concepts, relationships
-- **Storage:** Vector database (pgvector)
-- **Retention:** Indefinite with versioning
-- **Indexing:** HNSW vector index
+## Validated Skills
 
-### 4. Procedural Memory
-- **Scope:** Skills, routines, workflows
-- **Storage:** File system + Git
-- **Retention:** Indefinite with version history
-- **Indexing:** Metadata tags + content hash
+- (none yet — skills promoted here only after successful independent validation per SKILL.md §5, not after a single success)
 
-### 5. Prospective Memory
-- **Scope:** Scheduled tasks, reminders, deadlines
-- **Storage:** Cron + priority queue
-- **Retention:** Until triggered + 30 days
-- **Indexing:** Time-based + priority
+## Failure Lessons
 
-## Memory Operations
+- (none yet — failures recorded here with symptom, cause, fix, reusable rule per SKILL.md §16)
 
-### Store
-```python
-await memory.store(
-    key="episode:12345",
-    data={"outcome": "success", "metrics": {...}},
-    memory_type="episodic",
-    ttl=7776000  # 90 days
-)
-```
+## User Preferences
 
-### Retrieve
-```python
-results = await memory.retrieve(
-    query="deployment failures last week",
-    memory_type="episodic",
-    limit=10,
-    min_relevance=0.7
-)
-```
+- Prefers comprehensive, substantive output over padded content. Calls out filler. Prefers shorter honest answer to longer fabricated one.
+- Values technical accuracy and real citations over polished but unverified claims.
+- Wants everything in clean, well-organized English only.
+- Wants Hermes-optimized internet search superintelligence.
 
-### Prune
-```python
-deleted = await memory.prune(
-    memory_type="episodic",
-    older_than=timedelta(days=90),
-    strategy="lru"
-)
-```
+## Open Questions
 
-## Memory Governance
+- (none yet)
 
-- **Privacy:** No PII stored without encryption
-- **Retention:** Automatic pruning per policy
-- **Access:** Role-based read/write permissions
-- **Audit:** All access logged immutably
-- **Backup:** Daily snapshots with 30-day retention
+---
 
-## Configuration
-
-```yaml
-# config/system.yaml
-memory:
-  working:
-    backend: redis
-    max_tokens: 10000
-  episodic:
-    backend: postgresql
-    retention_days: 90
-  semantic:
-    backend: pgvector
-    embedding_model: text-embedding-3-large
-    dimensions: 3072
-  procedural:
-    backend: filesystem
-    path: ./memory/procedural
-  prospective:
-    backend: cron
-    store: redis
-```
+*Hermes Advanced Memory — 4000 chars max. Every entry needs provenance and TTL. See SKILL.md §9 and SOUL.md §10.*

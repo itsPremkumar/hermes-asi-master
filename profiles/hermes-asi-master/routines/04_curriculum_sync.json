@@ -1,0 +1,9 @@
+{
+  "name": "Weekly SIMA 2 Curriculum Sync",
+  "schedule": "0 0 * * 0",
+  "command": "python ./scripts/curriculum_picker.py",
+  "description": "Weekly autonomous evaluation of task complexity, learning value, and schedule of open-ended generalization milestones.",
+  "enabled": true,
+  "timeout_seconds": 300,
+  "log_output": "./evidence/curriculum_sync.log"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "hermes_asi_core",
+  "version": "4.0.0",
+  "description": "Hermes ASI Master Core Engine with 21 modular skills, 26 cognitive Python engines, and SOUL v4.0 constitution.",
+  "author": "Hermes Open Source Community",
+  "permission_ring": "R0_CORE_KERNEL",
+  "capabilities": [
+    "asi_constitution_soul",
+    "21_modular_skills",
+    "26_cognitive_engines",
+    "empirical_self_tracker",
+    "transactional_state_engine"
+  ],
+  "dependencies": [],
+  "tags": ["hermes", "asi", "skills", "soul", "cognition"]
+}

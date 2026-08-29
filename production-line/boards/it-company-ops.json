@@ -1,0 +1,42 @@
+{
+  "board_name": "it-company-ops",
+  "columns": {
+    "backlog": [
+      {
+        "id": "CARD-001",
+        "title": "FastAPI Auth Service",
+        "priority": "P0",
+        "assignee": "tech-lead"
+      },
+      {
+        "id": "CARD-002",
+        "title": "P2P Agent Mesh Protocol",
+        "priority": "P1",
+        "assignee": "agent-architect"
+      },
+      {
+        "id": "CARD-003",
+        "title": "Real-time Operations Dashboard",
+        "priority": "P2",
+        "assignee": "frontend"
+      }
+    ],
+    "in_progress": [
+      {
+        "id": "CARD-000",
+        "title": "Sovereign Company Fleet Verification",
+        "priority": "P0",
+        "assignee": "qa-lead",
+        "branch": "feature/fleet-verify"
+      }
+    ],
+    "review": [],
+    "done": [
+      {
+        "id": "CARD-INIT",
+        "title": "Initialize Sovereign AI Company Architecture",
+        "completed_at": "2026-08-29"
+      }
+    ]
+  }
+}

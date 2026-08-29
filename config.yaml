@@ -1,0 +1,135 @@
+provider: nous
+model: meituan/longcat-2.0:free
+terminal:
+  backend: REPLACE_ME
+  timeout_seconds: 120
+  max_output_bytes: 51200
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 5000
+  user_char_limit: 2000
+  write_approval: true
+  ttl_default_days: 90
+  provenance_required: true
+  spotlighting: true
+toolsets:
+  enabled:
+  - web_search
+  - browser
+  - file_read
+  - file_write
+  - terminal_exec
+  allowlist: []
+  blocklist: []
+  health_check: true
+search:
+  default_results: 10
+  max_parallel_searches: 5
+  timeout_seconds: 30
+  freshness_preference: high
+  language: en
+  evidence_persistence: true
+permissions:
+  default_policy: deny
+  approval_required_for:
+  - R4
+  - R5
+  - R6
+  auto_approve:
+  - R0
+  - R1
+  - R2
+  audit_log: true
+  least_privilege: true
+  spotlighting: true
+sandbox:
+  enabled: true
+  filesystem_policy: restricted
+  network_policy: limited
+  process_policy: contained
+  resource_limits:
+    memory_mb: 2048
+    cpu_percent: 80
+    timeout_seconds: 300
+  attestation: true
+scheduler:
+  enabled: false
+  heartbeat_interval_seconds: 60
+  lease_timeout_seconds: 300
+  checkpoint_interval_minutes: 10
+  max_concurrent_missions: 3
+  max_concurrent_agents: 8
+  re_anchor_interval_minutes: 60
+evaluation:
+  enabled: true
+  run_on_completion: true
+  benchmarks: []
+  regression_protection: true
+  evaluator_model: ''
+world_model:
+  persist: true
+  max_entities: 1000
+  max_transitions: 10000
+  snapshot_on_checkpoint: true
+  multi_horizon: true
+logging:
+  level: info
+  structured: true
+  include_provenance: true
+  redact_secrets: true
+  retention_days: 30
+  evidence_log: true
+agents:
+  max_depth: 4
+  max_fanout: 8
+  default_budget_tokens: 8000
+  default_timeout_seconds: 180
+  require_termination_condition: true
+  isolation: true
+guardrails:
+  confidentiality: true
+  spotlighting: true
+  non_modulation: true
+  dual_consciousness: true
+tools:
+  tool_search:
+    enabled: auto
+    threshold_pct: 10
+    search_default_limit: 5
+    max_search_limit: 20
+platforms:
+  telegram:
+    enabled: false
+    bot_token: ${TELEGRAM_BOT_TOKEN}
+    allowlist: []
+  discord:
+    enabled: false
+    bot_token: ${DISCORD_BOT_TOKEN}
+    channel_id: ''
+  slack:
+    enabled: false
+    bot_token: ${SLACK_BOT_TOKEN}
+    app_token: ${SLACK_APP_TOKEN}
+  whatsapp:
+    enabled: false
+    phone_number_id: ''
+  signal:
+    enabled: false
+    phone_number: ''
+  matrix:
+    enabled: false
+    homeserver: ''
+    user_id: ''
+fallback_models:
+- poolsnoot/laguna-s-2.1:free
+- deepseek-v4-flash-free
+- meta-llama/llama-3.3-70b-instruct:free
+- google/gemini-2.0-flash-exp:free
+- qwen/qwen-2.5-coder-32b-instruct:free
+- stepfun/step-3.7-flash:free
+- minimax/minimax-m2.5:free
+- nvidia/nemotron-3-super-120b:free
+- arcee-ai/trinity-large-preview:free
+- moonshotai/kimi-k3-free
+- huggingface/Qwen/Qwen2.5-Coder-32B-Instruct

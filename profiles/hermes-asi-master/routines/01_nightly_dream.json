@@ -1,0 +1,9 @@
+{
+  "name": "Nightly 13-Step Letta Dream Cycle",
+  "schedule": "0 2 * * *",
+  "command": "python ./scripts/sleep_cycle_runner.py",
+  "description": "Executes unattended 13-step sleep cycle at 2:00 AM: trajectory review, pattern mining, memory compression, skill forging, and world/self-model sync.",
+  "enabled": true,
+  "timeout_seconds": 1800,
+  "log_output": "./evidence/dream_cycle.log"
+}

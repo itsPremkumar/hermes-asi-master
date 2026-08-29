@@ -1,41 +1,30 @@
-# Dockerfile — HERMES-ASI-MASTER Container Image
+# Dockerfile — HERMES Advanced
+# Hermes-native Docker setup — most sandboxed terminal backend (per config.yaml)
 
-FROM python:3.11-slim AS base
+FROM python:3.11-slim
 
-# System dependencies
+# Hermes runs as non-root (official guideline)
+RUN useradd -m hermes && mkdir -p /home/hermes/project && chown hermes:hermes /home/hermes/project
+WORKDIR /home/hermes/project
+
+# System deps (git for worktrees, curl for skills, jq for JSON parsing per skill guideline: No External Deps)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc libpq-dev curl \
+    git \
+    curl \
+    jq \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+# Copy Hermes Advanced project
+COPY --chown=hermes:hermes . ./
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Hermes Agent (official)
+RUN pip install --no-cache-dir hermes-agent
 
-# Copy application code
-COPY . .
+# Hermes config lives at ~/.hermes/ — mount or copy at runtime
+# Do NOT bake .env (secrets) into image — pass via env or mount
 
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash hermes \
-    && chown -R hermes:hermes /app
 USER hermes
+EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
-    CMD python profiles/hermes-asi-master/scripts/health_check.py || exit 1
-
-# Default command
-ENTRYPOINT ["python", "-m", "hermes_asi_master"]
-CMD ["orchestrate"]
-
-# Production stage
-FROM base AS production
-ENV ENVIRONMENT=production
-EXPOSE 8080
-
-# Development stage
-FROM base AS development
-ENV ENVIRONMENT=development
-RUN pip install pytest pytest-asyncio pytest-cov ipython
-EXPOSE 8080 5678
+# Default: show Hermes help; override with `hermes` or `hermes chat`
+CMD ["hermes", "--help"]

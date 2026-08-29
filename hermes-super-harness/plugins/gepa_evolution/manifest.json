@@ -1,0 +1,14 @@
+{
+  "name": "gepa_evolution",
+  "version": "1.0.0",
+  "description": "Multi-Objective Genetic Pareto Evolutionary Prompt and Workflow Optimizer.",
+  "author": "Hermes Open Source Community",
+  "permission_ring": "R1_SANDBOX_LOCAL",
+  "capabilities": [
+    "genetic_prompt_mutation",
+    "pareto_frontier_selection",
+    "workflow_adaptation"
+  ],
+  "dependencies": [],
+  "tags": ["evolution", "gepa", "dspy", "pareto", "optimization"]
+}

@@ -1,54 +1,79 @@
-# .gitignore — HERMES-ASI-MASTER
+# HERMES Advanced — .gitignore
+# Hermes-native ignores — keeps secrets, worktrees, and runtime out of git
 
-# Python
+# ── Secrets (NEVER commit) ──────────────────────────────────────────
+.env
+*.env
+!.env.example
+auth.json
+*_token.json
+*_secret.json
+google_token.json
+google_client_secret.json
+*.pem
+*.key
+
+# ── Hermes Runtime ──────────────────────────────────────────────────
+.hermes/
+sessions.db
+checkpoints/
+*.db
+*.sqlite
+
+# ── Git Worktrees (Hermes parallel work) ────────────────────────────
+.worktrees/
+hermes-worktree-*
+.delegate/
+.delegate/
+
+# ── Evidence & Synthesis Output (per-task, not repo) ────────────────
+evidence/
+synthesis-output/
+integration/
+staging/
+prototype/
+.hermes-worktree-*
+
+# ── Python ──────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-.Python
-*.egg-info/
-.eggs/
-build/
-dist/
-*.egg
-
-# Virtual environments
+.venv/
 venv/
 env/
-.venv/
-.env
-.envrc
+.env/
+*.egg-info/
+dist/
+build/
 
-# IDE
-.idea/
-.vscode/
+# ── Node ────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+
+# ── OS ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
 *.swp
 *.swo
 *~
 
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
+# ── IDE ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.code-workspace
+.cursor/
 
-# Project specific
-logs/
-cache/
-output/
+# ── Logs ────────────────────────────────────────────────────────────
 *.log
-backups/
-state.db
-*.sqlite
-*.sqlite3
+logs/
 
-# Secrets
-*.pem
-*.key
-*.cert
-secrets/
+# ── Docker ──────────────────────────────────────────────────────────
+.dockerignore
 
-# Test artifacts
-.coverage
-htmlcov/
-.pytest_cache/
-.tox/
+*.bak
+*.tmp
