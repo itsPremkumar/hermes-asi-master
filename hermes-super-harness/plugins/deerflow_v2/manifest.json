@@ -1,0 +1,16 @@
+{
+  "name": "deerflow_v2",
+  "version": "2.0.0",
+  "description": "ByteDance DeerFlow 2.0 SuperAgent Engine adapted for Hermes Agent. Features Plan-Execute StateGraph, Dynamic Subagent Swarm, Long-term Fact Memory, and Sandboxed AST Verification.",
+  "author": "ByteDance DeerFlow & Hermes Open Source Community",
+  "permission_ring": "R1_SANDBOX_LOCAL",
+  "capabilities": [
+    "plan_execute_dag",
+    "dynamic_swarm_delegation",
+    "long_term_fact_memory",
+    "artifact_checkpointing",
+    "replan_loop_verifier"
+  ],
+  "dependencies": [],
+  "tags": ["deerflow", "superagent", "langgraph", "multi_agent", "swarm"]
+}
