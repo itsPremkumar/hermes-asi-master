@@ -1,0 +1,64 @@
+# agentforge-x Presets
+# Demonstrate a full six-agent fleet configuration.
+# Each preset defines which agents to activate, the topic, and tuning parameters.
+
+presets:
+  - name: default
+    description: Standard six-agent fleet for general problem solving
+    agents: [researcher, coder, critic, tester, writer, ops]
+    topic: General problem solving
+    max_iterations: 3
+    judge_threshold: 0.7
+    metadata:
+      version: "1.0.0"
+      created_by: "agentforge-x"
+
+  - name: code-review
+    description: Code review and quality assessment fleet
+    agents: [coder, tester, critic]
+    topic: Code review
+    max_iterations: 2
+    judge_threshold: 0.8
+    metadata:
+      version: "1.0.0"
+      specialization: quality
+
+  - name: research-synthesis
+    description: Deep research and synthesis fleet
+    agents: [researcher, writer, critic]
+    topic: Research synthesis
+    max_iterations: 3
+    judge_threshold: 0.75
+    metadata:
+      version: "1.0.0"
+      specialization: research
+
+  - name: full-stack
+    description: End-to-end application development fleet
+    agents: [researcher, coder, tester, ops]
+    topic: Full-stack development
+    max_iterations: 3
+    judge_threshold: 0.7
+    metadata:
+      version: "1.0.0"
+      specialization: development
+
+  - name: documentation
+    description: Documentation and content creation fleet
+    agents: [writer, critic, ops]
+    topic: Documentation
+    max_iterations: 2
+    judge_threshold: 0.65
+    metadata:
+      version: "1.0.0"
+      specialization: content
+
+  - name: ops-deploy
+    description: Infrastructure and deployment fleet
+    agents: [ops, coder, tester]
+    topic: Deployment
+    max_iterations: 2
+    judge_threshold: 0.8
+    metadata:
+      version: "1.0.0"
+      specialization: infrastructure
