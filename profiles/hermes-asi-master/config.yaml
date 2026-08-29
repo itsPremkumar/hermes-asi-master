@@ -1,8 +1,5 @@
-provider: anthropic
-model:
-  default: meituan/longcat-2.0:free
-  provider: nous
-  base_url: https://api.nous-research.com/v1
+provider: nous
+model: meituan/longcat-2.0:free
 reasoning_effort: high
 context_window: 200000
 temperature: 0.2
@@ -125,7 +122,7 @@ economic_guardrails:
   max_daily_budget_usd: 5.0
   max_monthly_budget_usd: 100.0
   hard_stop_on_budget_exceeded: true
-  fallback_to_local_on_exhaustion: true
+  fallback_to_local_on_exhaustion: false
 tools:
   tool_search:
     enabled: auto
@@ -155,3 +152,15 @@ platforms:
     enabled: false
     homeserver: ''
     user_id: ''
+fallback_models:
+- poolsnoot/laguna-s-2.1:free
+- deepseek-v4-flash-free
+- meta-llama/llama-3.3-70b-instruct:free
+- google/gemini-2.0-flash-exp:free
+- qwen/qwen-2.5-coder-32b-instruct:free
+- stepfun/step-3.7-flash:free
+- minimax/minimax-m2.5:free
+- nvidia/nemotron-3-super-120b:free
+- arcee-ai/trinity-large-preview:free
+- moonshotai/kimi-k3-free
+- huggingface/Qwen/Qwen2.5-Coder-32B-Instruct

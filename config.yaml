@@ -1,5 +1,5 @@
-provider: REPLACE_ME
-model: REPLACE_ME
+provider: nous
+model: meituan/longcat-2.0:free
 terminal:
   backend: REPLACE_ME
   timeout_seconds: 120
@@ -121,3 +121,15 @@ platforms:
     enabled: false
     homeserver: ''
     user_id: ''
+fallback_models:
+- poolsnoot/laguna-s-2.1:free
+- deepseek-v4-flash-free
+- meta-llama/llama-3.3-70b-instruct:free
+- google/gemini-2.0-flash-exp:free
+- qwen/qwen-2.5-coder-32b-instruct:free
+- stepfun/step-3.7-flash:free
+- minimax/minimax-m2.5:free
+- nvidia/nemotron-3-super-120b:free
+- arcee-ai/trinity-large-preview:free
+- moonshotai/kimi-k3-free
+- huggingface/Qwen/Qwen2.5-Coder-32B-Instruct
