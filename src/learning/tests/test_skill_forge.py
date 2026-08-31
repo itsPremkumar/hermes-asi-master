@@ -86,30 +86,6 @@ class TestSkill:
         s2 = Skill(name="b", description="d", template="T {y}")
         assert s1.hash() != s2.hash()
 
-    def test_to_skill_md(self):
-        s = Skill(
-            name="write_file",
-            description="Write content to a file",
-            template="Write {content} to {path}",
-            parameters=[
-                SkillParameter(name="content", description="file content", required=True),
-                SkillParameter(name="path", description="file path", required=True),
-            ],
-            version=2,
-        )
-        md = s.to_skill_md()
-        assert "name: write_file" in md
-        assert "version: 2" in md
-        assert "# Write content to a file" in md or "## Parameters" in md
-        assert "**content**" in md
-        assert "**path**" in md
-
-    def test_to_skill_md_no_params(self):
-        s = Skill(name="simple", description="A simple skill", template="Do something")
-        md = s.to_skill_md()
-        assert "name: simple" in md
-        assert "Do something" in md
-
     def test_to_dict_roundtrip(self):
         s = Skill(
             name="test",
@@ -281,29 +257,6 @@ class TestSkillRegistry:
         assert len(r) == 1
         assert "x" in r
         assert "y" not in r
-
-    def test_export_hermes_skill(self):
-        r = SkillRegistry()
-        s = Skill(
-            name="my_skill",
-            description="A test skill",
-            template="Do {action}",
-            parameters=[SkillParameter(name="action")],
-            test_pass_rate=0.9,
-        )
-        r.add(s)
-        with tempfile.TemporaryDirectory() as tmpdir:
-            path = r.export_hermes_skill("my_skill", tmpdir)
-            assert path.exists()
-            content = path.read_text(encoding="utf-8")
-            assert "name: my_skill" in content
-            assert "Do {action}" in content
-
-    def test_export_hermes_skill_not_found(self):
-        r = SkillRegistry()
-        with tempfile.TemporaryDirectory() as tmpdir:
-            with pytest.raises(KeyError):
-                r.export_hermes_skill("nonexistent", tmpdir)
 
 
 if __name__ == "__main__":

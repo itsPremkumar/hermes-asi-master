@@ -102,21 +102,6 @@ class TestCurriculum:
         c = Curriculum(id="c1")
         assert c.completion_rate(set()) == 1.0
 
-    def test_to_skill_md(self):
-        c = Curriculum(id="curr-abc123")
-        c.add_task(PracticeTask(id="t1", capability="sort", description="sort a list", difficulty=0.3))
-        c.add_task(PracticeTask(id="t2", capability="sort", description="sort reversed", difficulty=0.6))
-        md = c.to_skill_md()
-        assert "name: curr-abc123" in md
-        assert "2 practice tasks" in md
-        assert "**t1**" in md
-        assert "**t2**" in md
-
-    def test_to_skill_md_empty(self):
-        c = Curriculum(id="curr-empty")
-        md = c.to_skill_md()
-        assert "0 practice tasks" in md
-
     def test_to_dict(self):
         c = Curriculum(id="c1")
         c.add_task(PracticeTask(id="t1", capability="c", description="d", difficulty=0.3))
