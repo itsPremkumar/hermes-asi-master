@@ -197,3 +197,44 @@ class TestMBPPBenchmark:
         assert len(b.get_results(success=True)) == 1
         assert len(b.get_results(success=False)) == 1
         os.unlink(path)
+
+    def test_results_persist(self):
+        path = _create_temp_json([
+            {"id": "1", "description": "A", "code": "x=1", "test_cases": []},
+            {"id": "2", "description": "B", "code": "y=2", "test_cases": []},
+        ])
+        b = MBPPBenchmark()
+        b.load_problems(path)
+        b.run_problem("1", "x=1")
+        b.run_problem("2", "y=2")
+        assert len(b.results) == 2
+        os.unlink(path)
+
+    def test_problem_with_tags(self):
+        p = MBPPProblem(id="p1", description="Math", code="x=1", test_cases=[], tags=["math", "easy"])
+        assert "math" in p.tags
+
+    def test_result_error_message(self):
+        ev = MBPPEvaluator()
+        p = MBPPProblem(id="p1", description="Err", code="raise ValueError", test_cases=["assert False"])
+        r = ev.evaluate(p, "raise ValueError")
+        assert r.error is not None
+
+    def test_multiple_runs_accumulate(self):
+        path = _create_temp_json([{"id": "1", "description": "T", "code": "x=1", "test_cases": []}])
+        b = MBPPBenchmark()
+        b.load_problems(path)
+        b.run_problem("1", "x=1")
+        b.run_problem("1", "x=1")
+        b.run_problem("1", "x=1")
+        assert len(b.results) == 3
+        os.unlink(path)
+
+    def test_problem_default_values(self):
+        p = MBPPProblem(id="p1", description="Test", code="x=1", test_cases=[])
+        assert p.tags == []
+        assert p.difficulty == "medium"
+
+    def test_result_with_no_error(self):
+        r = MBPPResult(id="r1", problem_id="p1", success=True, test_results={"t1": True})
+        assert r.error is None
