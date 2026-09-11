@@ -1,0 +1,9 @@
+[project]
+name = "metrics-system"
+version = "0.1.0"
+description = "Engineering Metrics System — DORA, Flow & Team Health Dashboard"
+requires-python = ">=3.10"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
