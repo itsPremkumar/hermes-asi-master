@@ -1,0 +1,290 @@
+openapi: 3.0.3
+info:
+  title: Enterprise API Gateway & Service Mesh Monitor
+  version: 1.0.0
+  description: |
+    API Gateway providing rate limiting, authentication, service mesh routing,
+    and real-time health monitoring for the enterprise microservices platform.
+  contact:
+    name: Platform Team
+    email: platform@example.com
+
+servers:
+  - url: http://localhost:3000
+    description: Local development
+  - url: https://gateway.staging.example.com
+    description: Staging environment
+
+paths:
+  /health:
+    get:
+      summary: Gateway health check
+      tags: [Health]
+      responses:
+        '200':
+          description: Gateway is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /health/ready:
+    get:
+      summary: Readiness probe
+      tags: [Health]
+      responses:
+        '200':
+          description: Ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadyResponse'
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      tags: [Monitoring]
+      responses:
+        '200':
+          description: Metrics payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponse'
+
+  /auth/login:
+    post:
+      summary: Authenticate and receive JWT
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      tags: [Authentication]
+      responses:
+        '200':
+          description: Token refreshed
+        '401':
+          description: Invalid token
+
+  /auth/introspect:
+    get:
+      summary: Introspect current token
+      tags: [Authentication]
+      responses:
+        '200':
+          description: Token info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntrospectResponse'
+
+  /api/info:
+    get:
+      summary: Gateway info
+      tags: [API]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Gateway info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewayInfo'
+
+  /api/resources:
+    get:
+      summary: List resources
+      tags: [API]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Resource list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceList'
+
+  /api/mesh/route:
+    post:
+      summary: Route request through service mesh
+      tags: [Mesh]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeshRouteRequest'
+      responses:
+        '200':
+          description: Routing result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeshRouteResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded]
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceHealth'
+        timestamp:
+          type: string
+          format: date-time
+
+    ServiceHealth:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [healthy, degraded, down]
+        latencyMs:
+          type: number
+        lastCheck:
+          type: string
+          format: date-time
+        details:
+          type: string
+
+    ReadyResponse:
+      type: object
+      properties:
+        ready:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+
+    MetricsResponse:
+      type: object
+      properties:
+        httpRequestDuration:
+          type: string
+        httpRequestsTotal:
+          type: string
+        serviceHealthStatus:
+          type: string
+        kafkaMessagesPublished:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          type: object
+          properties:
+            username:
+              type: string
+            role:
+              type: string
+        expiresIn:
+          type: string
+
+    IntrospectResponse:
+      type: object
+      properties:
+        active:
+          type: boolean
+        sub:
+          type: string
+        role:
+          type: string
+        exp:
+          type: number
+
+    GatewayInfo:
+      type: object
+      properties:
+        service:
+          type: string
+        version:
+          type: string
+        uptime:
+          type: number
+        nodeVersion:
+          type: string
+
+    ResourceList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              status:
+                type: string
+
+    MeshRouteRequest:
+      type: object
+      required: [target]
+      properties:
+        target:
+          type: string
+        payload:
+          type: object
+
+    MeshRouteResponse:
+      type: object
+      properties:
+        routedTo:
+          type: string
+        payload:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+        gateway:
+          type: string
