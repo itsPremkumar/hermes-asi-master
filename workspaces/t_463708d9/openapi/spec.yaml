@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+  title: Enterprise API Gateway & Service Mesh Monitor
+  version: 1.0.0
+  description: |
+    API Gateway with rate limiting, JWT authentication,
+    and service mesh health monitoring.
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:3000
+    description: Staging server
+paths:
+  /health:
+    get:
+      summary: Gateway health check
+      tags: [Health]
+      responses:
+        '200':
+          description: Gateway is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /health/detailed:
+    get:
+      summary: Detailed health with service mesh status
+      tags: [Health]
+      responses:
+        '200':
+          description: Detailed health status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailedHealthResponse'
+  /health/services:
+    get:
+      summary: List all monitored services
+      tags: [Health]
+      responses:
+        '200':
+          description: Service list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServicesResponse'
+  /metrics:
+    get:
+      summary: Gateway metrics snapshot
+      tags: [Metrics]
+      responses:
+        '200':
+          description: Metrics data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponse'
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+        uptime:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+    DetailedHealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceHealth'
+    ServiceHealth:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [healthy, degraded, down]
+        responseTimeMs:
+          type: number
+        lastChecked:
+          type: string
+          format: date-time
+    ServicesResponse:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            type: string
+    MetricsResponse:
+      type: object
+      properties:
+        requestsTotal:
+          type: integer
+        requestsPerSecond:
+          type: number
+        avgResponseTimeMs:
+          type: number
+        errorRate:
+          type: number
