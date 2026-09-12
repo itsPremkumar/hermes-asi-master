@@ -1,0 +1,208 @@
+name: CI/CD Pipeline — Blue-Green Deploy
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      color:
+        description: "Deploy color (blue/green)"
+        required: true
+        default: "blue"
+
+env:
+  APP_NAME: cicd-orchestrator
+  NAMESPACE: default
+
+jobs:
+  # ---------- Security Gate ----------
+  security-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Semgrep static analysis
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            auto
+            p/owasp-top-ten
+            p/security-audit
+          publishToken: ${{ secrets.SEMGREP_TOKEN }}
+          publishDeployment: github-actions
+        continue-on-error: true
+
+      - name: Secrets detection
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+          ignore-unfixed: true
+
+      - name: Verify no secrets in code
+        run: |
+          if grep -rnE '(api_key|password|token|secret)\s*=\s*["\x27][^"\x27]+["\x27]' --include="*.py" --include="*.yaml" --include="*.yml" --include="*.json" . 2>/dev/null; then
+            echo "::error::Potential secrets found in code"
+            exit 1
+          fi
+          echo "Security gate: passed"
+
+  # ---------- Build ----------
+  build:
+    needs: security-gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install deps
+        run: uv sync --dev --no-interaction
+
+      - name: Lint
+        run: uv run ruff check orchestrator/ tests/
+
+      - name: Type-check
+        run: uv run python -c "import orchestrator"
+
+      - name: Build artifact
+        run: |
+          uv build --wheel
+          ls -la dist/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  # ---------- Test ----------
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install deps
+        run: uv sync --dev --no-interaction
+
+      - name: Run tests with coverage
+        run: uv run pytest tests/ -v --cov=orchestrator --cov-report=xml --cov-report=term-missing
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.xml
+
+      - name: Coverage gate (min 80%)
+        run: |
+          COVERAGE=$(uv run pytest tests/ --cov=orchestrator --cov-report=term-missing 2>&1 | grep "TOTAL" | awk '{print $4}' | tr -d '%')
+          echo "Coverage: ${COVERAGE}%"
+          if [ "${COVERAGE%%.*}" -lt 80 ]; then
+            echo "::error::Coverage below 80%"
+            exit 1
+          fi
+
+  # ---------- Deploy ----------
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: "v1.30.0"
+
+      - name: Set up Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Configure Vault
+        run: |
+          echo "VAULT_ADDR=${{ secrets.VAULT_ADDR }}" >> $GITHUB_ENV
+          echo "VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Blue-Green Deploy
+        env:
+          COLOR: ${{ github.event.inputs.color || 'blue' }}
+        run: |
+          uv run cicd-orchestrator deploy \
+            --app ${{ env.APP_NAME }} \
+            --namespace ${{ env.NAMESPACE }} \
+            --image ghcr.io/${{ github.repository }}/${{ env.APP_NAME }} \
+            --tag ${{ github.sha }} \
+            --color ${COLOR}
+
+      - name: Verify deployment
+        run: |
+          sleep 10
+          kubectl rollout status deployment/${{ env.APP_NAME }}-${COLOR} -n ${{ env.NAMESPACE }} --timeout=120s
+          kubectl get pods -n ${{ env.NAMESPACE }} -l app=${{ env.APP_NAME }}
+
+  # ---------- Smoke Tests ----------
+  smoke:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Health check
+        run: |
+          URL="${{ vars.APP_URL }}/healthz"
+          for i in $(seq 1 30); do
+            HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" "$URL" || echo "000")
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "Health check passed"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Health check failed"
+          exit 1
+
+  # ---------- Cleanup old ----------
+  cleanup:
+    needs: [deploy, smoke]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: "v1.30.0"
+
+      - name: Scale down old color
+        env:
+          COLOR: ${{ github.event.inputs.color || 'blue' }}
+        run: |
+          OLD=$(if [ "${COLOR}" = "blue" ]; then echo "green"; else echo "blue"; fi)
+          kubectl scale deployment ${{ env.APP_NAME }}-${OLD} --replicas=0 -n ${{ env.NAMESPACE }} || true

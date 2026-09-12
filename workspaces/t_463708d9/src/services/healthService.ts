@@ -1,5 +1,3 @@
-import { Request, Response, NextFunction } from 'express';
-
 export interface HealthEntry {
   name: string;
   status: 'healthy' | 'degraded' | 'down';
