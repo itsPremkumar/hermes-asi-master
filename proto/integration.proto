@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package enterprise;
+
+option go_package = "enterprise-integration/proto/gen;enterprise";
+
+// IntegrationService handles cross-system synchronous communication.
+service IntegrationService {
+  rpc Ping(PingRequest) returns (PingResponse);
+  rpc SubmitEvent(SubmitEventRequest) returns (SubmitEventResponse);
+  rpc GetEventStatus(GetEventStatusRequest) returns (GetEventStatusResponse);
+  rpc TransformData(TransformDataRequest) returns (TransformDataResponse);
+}
+
+message PingRequest { string message = 1; }
+message PingResponse { string message = 1; }
+
+message SubmitEventRequest {
+  string event_id   = 1;
+  string event_type = 2;
+  bytes  payload    = 3;
+  string idempotency_key = 4;
+}
+
+message SubmitEventResponse {
+  string event_id = 1;
+  string status   = 2;
+}
+
+message GetEventStatusRequest { string event_id = 1; }
+message GetEventStatusResponse {
+  string event_id = 1;
+  string status   = 2;
+  string processed_at = 3;
+}
+
+message TransformDataRequest {
+  string source_system = 1;
+  string target_system = 2;
+  bytes  data          = 3;
+  map<string, string> metadata = 4;
+}
+
+message TransformDataResponse {
+  bytes  transformed_data = 1;
+  string status           = 2;
+}
